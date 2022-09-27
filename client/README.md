@@ -1,3 +1,13 @@
+# Welcome to Ruby Dungeon!
+
+## This is an adventure game combining a React Client with a Ruby Database using Rails!
+
+To run this project, run `bundle install` => `npm install --prefix client` => `foreman start -f Procfile.dev`
+
+Upon the page loading, sign up and head to the academy to make a character!
+
+Have fun and find the elusive ruby hidden in the darkest corners of the dungeon!
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
