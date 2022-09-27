@@ -7,24 +7,40 @@ class Character < ApplicationRecord
     has_many :spells, through: :spellslots
 
 
-    def initialize
-        @max_pockets = self.strength * 2
-    end
-
     def learn_spell(spell)
         if (self.spells.include?(spell))
-            Spellslot.create(spell_id: spell.id, caster: self) 
+            self.spellslots.create(spell_id: spell.id) 
         else
             puts "Already know spell!"
         end
     end
 
     def pick_up_item(item)
-        if (self.pockets.count < @max_pockets)
-            Pocket.create(item_id: item.id, holder: self)
-        else
-            puts "Pockets full!"
+        self.pockets.create(item_id: item.id)
+    end
+
+    def buy_item(item)
+        if (self.gold >= item.value)
+            self.pick_up_item(item)
+            self.update(gold: self.gold - item.value)
+            true
+        elsif (self.gold < item.value)
+            puts "Too poor!"
+            false
         end
     end
+
+    def sell_item(item)
+        pocket = Pocket.find_by(item_id: item.id, holder: self)
+        if (pocket)
+            pocket.destroy
+            self.update(gold: self.gold + item.value)
+            true
+        else
+            puts "Item not found"
+            false
+        end
+    end           
+
 
 end

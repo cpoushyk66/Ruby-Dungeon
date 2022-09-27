@@ -29,7 +29,27 @@ class CharactersController < ApplicationController
         character.destroy
         head :no_content
     end
+
+    def characters
+        characters = User.find(params[:id]).characters
+        render json: characters, status: :ok
+    end
     
+    def shop
+        character = find_character
+        item = Item.find_by(id: params[:item_id])
+
+        if (params[:shop_action] == "buy")
+            character.buy_item(item)
+            render json: character, staus: :accepted
+        elsif (params[:shop_action] == "sell")
+            character.sell_item(item)
+            render json: character, staus: :accepted
+        else
+            render json: {error: "Invalid Action!"}, status: :unauthorized
+        end
+    end
+
     private
 
 

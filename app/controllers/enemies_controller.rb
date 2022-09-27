@@ -31,7 +31,7 @@ class EnemiesController < ApplicationController
     end
 
     def random
-        enemies = Enemy.get_enemies(params[:num])
+        enemies = Enemy.get_enemies(params[:num].to_i)
         render json: enemies, status: :ok
     end
 

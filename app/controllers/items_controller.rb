@@ -30,6 +30,10 @@ class ItemsController < ApplicationController
         head :no_content
     end
 
+    def random
+        items = Item.get_items(params[:num].to_i)
+        render json: items, status: :ok
+    end
 
     private
 
