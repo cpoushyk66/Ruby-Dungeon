@@ -18,12 +18,12 @@ Rails.application.routes.draw do
 
   #User Custom Routes
     #Login User and get full info
-  get "users/:username/:password/login", to: "users#login"
+  get "users/login/:username/:password", to: "users#login"
     #Give admin power to user given admin is admin
   patch "users/:admin_id/give_admin_access/:user_id", to: "users#give_admin_access"
 
   #User - Character Intertwined Routes
-  get "users/:id/characters", to: "users#characters"
+  get "users/:id/characters", to: "characters#characters"
 
   #Character CRUD Routes
   get "characters", to: "characters#index"
@@ -33,7 +33,8 @@ Rails.application.routes.draw do
   delete "characters/:id", to: "characters#destroy"
 
   #Characters Custom Routes
-
+    #Makes character buy item with id :id
+  get "characters/:id/:shop_action/:item_id", to: "characters#shop"
   #Enemy Basic CRUD Routes
   get "enemies", to: "enemies#index"
   get "enemies/:id", to: "enemies#show"
@@ -52,6 +53,10 @@ Rails.application.routes.draw do
   patch "items/:id", to: "items#update"
   delete "items/:id", to: "items#destroy"
 
+  #Item Custom Routes
+    #Get a number of random items equal to :num
+  get "items/random/:num", to: "items#random"
+
   #Spell Basic CRUD Routes
   get "spells", to: "spells#index"
   get "spells/:id", to: "spells#show"
@@ -59,4 +64,6 @@ Rails.application.routes.draw do
   patch "spells/:id", to: "spells#update"
   delete "spells/:id", to: "spells#destroy"
 
+  #Special Custom Routes
+  get "dungeons/generate/:num", to: "dungeon#generate_dungeon"
 end

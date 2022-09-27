@@ -10,7 +10,7 @@ class UsersController < ApplicationController
 
     def show
         user = find_user
-        render json: user, except: [:id, :created_at, :updated_at], status: :ok
+        render json: user, status: :ok
     end
 
     def create
@@ -31,24 +31,22 @@ class UsersController < ApplicationController
     end
 
     def login
-        user = User.find("username = ? AND password = ?", params[:username], params[:password])
-        render json: user, status: :accepted
+        user = User.where("username = ? AND password = ?", params[:username], params[:password]).take
+        if (user)
+            render json: user, methods: :characters, status: :accepted
+        else
+            render_not_found_response
+        end
     end
 
     def give_admin_access
-        admin = find(params[:admin_id])
-        user = find(params[:user_id])
+        admin = User.find(params[:admin_id])
+        user = User.find(params[:user_id])
         if (User.give_admin_access(admin, user))
             render json: user, status: :accepted
         else
             render json: {error: "Unauthorized Action!"}, status: :unauthorized
         end
-    end
-
-    def characters
-        user = find_user
-        characters = user.characters
-        render json: characters, status: :ok
     end
     
     private
