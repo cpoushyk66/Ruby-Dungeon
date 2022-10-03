@@ -1,5 +1,5 @@
 class CharacterSerializer < ActiveModel::Serializer
-  attributes :id, :name, :title, :xp, :klass, :strength, :dexterity, :wisdom, :charisma, :intelligence, :constitution, :gold, :user_id, :level, :hp_max, :hp_current, :mp_max, :mp_current, :speed, :spell_damage, :attack_damage
+  attributes :id, :name, :title, :xp, :klass, :strength, :dexterity, :wisdom, :charisma, :intelligence, :constitution, :gold, :user_id, :level, :hp_max, :hp_current, :mp_max, :mp_current, :speed, :spell_damage, :attack_damage, :equiped_items
 
   has_many :items
   has_many :spells
@@ -42,13 +42,8 @@ class CharacterSerializer < ActiveModel::Serializer
     end
   end
 
-
-  def level
-    self.object.xp / 100 + 1
-  end
-
   def hp_max
-    (self.level + self.object.constitution) * 30
+    (self.object.level + self.object.constitution) * 30
   end
 
   def hp_current
@@ -56,7 +51,7 @@ class CharacterSerializer < ActiveModel::Serializer
   end
 
   def mp_max
-    (self.get_spell_bonus_type + self.level) * 100
+    (self.get_spell_bonus_type + self.object.level) * 100
   end
 
   def mp_current
@@ -68,12 +63,20 @@ class CharacterSerializer < ActiveModel::Serializer
   end
 
   def spell_damage
-    self.get_spell_bonus_type + self.level
+    self.get_spell_bonus_type + self.object.level + self.object.get_collective_item_spell_damage
   end
 
   def attack_damage
-    self.get_attack_bonus_type + self.level
+    self.get_attack_bonus_type + self.object.level + self.object.get_collective_item_attack_damage
   end
-        
+    
+
+  def equiped_items
+    self.object.equipment.collect do |e|
+      if e.pocket_id != nil
+        Pocket.find_by(id: e.pocket_id).item
+      end
+    end
+  end
 
 end

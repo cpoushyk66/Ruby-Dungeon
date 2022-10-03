@@ -1,5 +1,6 @@
 class CharactersController < ApplicationController
 
+    before_action :set_character, only: [:show, :update, :destroy, :shop, :level_up]
     rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
     rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity
 
@@ -9,8 +10,7 @@ class CharactersController < ApplicationController
     end
 
     def show
-        character = find_character
-        render json: character, status: :ok
+        render json: @character, status: :ok
     end
 
     def create
@@ -19,42 +19,48 @@ class CharactersController < ApplicationController
     end
 
     def update
-        character = find_character
-        character.update!(character_params)
-        render json: character, status: :accepted
+        @character.update!(character_params)
+        render json: @character, status: :accepted
     end
 
     def destroy
-        character = find_character
-        character.destroy
+        @character.destroy
         head :no_content
     end
 
     def characters
-        characters = User.find(params[:id]).characters
+        characters = User.find(params[:id]).characters.order(:updated_at).reverse_order
         render json: characters, status: :ok
     end
     
     def shop
-        character = find_character
         item = Item.find_by(id: params[:item_id])
 
         if (params[:shop_action] == "buy")
-            character.buy_item(item)
-            render json: character, staus: :accepted
+            @character.buy_item(item)
+            render json: @character, staus: :accepted
         elsif (params[:shop_action] == "sell")
-            character.sell_item(item)
-            render json: character, staus: :accepted
+            @character.sell_item(item)
+            render json: @character, staus: :accepted
         else
             render json: {error: "Invalid Action!"}, status: :unauthorized
+        end
+    end
+
+    def level_up
+        if (@character.level_up)
+            @character.update(character_params)
+            render json: @character, status: :accepted
+        else
+            render json: {error: "Not enough xp"}, status: :unauthorized
         end
     end
 
     private
 
 
-    def find_character
-        Character.find(params[:id])
+    def set_character
+        @character = Character.find(params[:id])
     end
 
     def character_params

@@ -14,148 +14,69 @@ import AdminControls from "./AdminControls";
 
 function App() {
 
-    const [users, setUsers] = useState([])
     const [currentUser, setCurrentUser] = useState(null)
+    const [userCharacters, setUserCharacters] = useState([])
     const [currentCharacter, setCurrentCharacter] = useState(null)
-    const [newUsername, setUsername] = useState("")
-    const [newPassword, setPassword] = useState("")
-    const [newProfileImg, setProfileImg] = useState("")
     const [login, setLogin] = useState(false);
-    const [loginUser, setLoginUser] = useState("")
-    const [loginPass, setLoginPass] = useState("")
     const [errors, setErrors] = useState([])
-    const [currentUserPassword, setCurrentUserPassword] = useState("")
 
     useEffect(() => {
-        fetch("/users")
+        fetch("/me").then((res) => {
+            if (res.ok) {
+              res.json().then(handleLogin);
+            }
+          });
+    }, [])
+
+
+
+    function handleLogin(user) {
+        setCurrentUser(user)
+        fetch(`users/${user.id}/characters`)
         .then(res => {
             if (res.ok) {
-                res.json().then(setUsers)
-            }
-            else {
-                res.json().then(e => setErrors([...errors, e.error]))
-            }
-        })
-
-    }, [currentCharacter])
-
-
-
-    function handleLogin(username, password) {
-      
-        fetch(`/users/login/${username}/${password}`)
-        .then(res => {
-            if (res.ok) {
-                res.json().then(user => {
-                    fetch(`/users/${user.id}/characters`)
-                .then(res => res.json())
-                .then(characters => {
-                setCurrentUser({...user, characters})
-
-                if (currentCharacter != null) {
-                    setCurrentCharacter(characters.find(character => character.id == currentCharacter.id))
-                }
-                else {
-                    setCurrentCharacter(characters[0])
-                }
-                setCurrentUserPassword(password)
-            })
+                res.json().then(characters => {
+                    setUserCharacters(characters)
                 })
             }
-            else {
-                res.json().then(error => setErrors([...errors, error.error]))
-            }
-        })
-        
-        setLoginUser('')
-        setLoginPass('')
-        setLogin(false)
-            
-        
+        })    
     }
 
     function updateCurrentCharacter(char) {
+        setUserCharacters(() => userCharacters.map(character => {
+            if (character.id == char.id) return char
+
+            return character
+        }))
+
         setCurrentCharacter(char)
-        updateCurrentUser()
     }
 
-    function updateCurrentUser() {
-        handleLogin(currentUser.username, currentUserPassword)
+    function handleDeleteCharacter(character) {
+        fetch(`characters/${character.id}`, {
+            method: "DELETE"
+        })
+        let newCharacters = userCharacters.filter(char => char.id != character.id)
+        setUserCharacters(newCharacters)
+        setCurrentCharacter(null)
     }
+
 
     //User Functions
     
 
     function selectCharacter(char) {
-        
-        fetch(`/characters/${char.id}`)
-        .then (res => {
-        if (res.ok) {
-            res.json().then(setCurrentCharacter)
-        }
-        else {
-            res.json().then(error => setErrors([...errors, error.error]))
-        }
-    })
-
-    }
-
-    function handleUpdateLoginUser(e) {
-        setLoginUser(e.target.value)
-    }
-
-    function handleUpdateLoginPass(e) {
-        setLoginPass(e.target.value)
+        setCurrentCharacter(userCharacters.find(character => character.id === char.id))
     }
 
     function handleLogOut() {
         setLogin(false)
-        setCurrentUser(null)
-        setCurrentCharacter(null)
-    }
-
-    function handleUpdateFormUsername(e) {
-        setUsername(e.target.value)
-    }
-
-    function handleUpdateFormPassword(e) {
-        setPassword(e.target.value)
-    }
-
-    function handleUpdateFormProfileImg(e) {
-        setProfileImg(e.target.value)
-    }
-
-    function handleAddUser(e) {
-        e.preventDefault()
-        let newUser = {
-            username: newUsername,
-            password: newPassword,
-            image: newProfileImg
-        }
-
-        fetch("/users", {
-            method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(newUser)
+        fetch("/logout", {
+            method: "DELETE"
         })
-        .then(res => {
-            if (res.ok) {
-                res.json().then(user => {
-                    setUsers([...users, user])
-                    setCurrentUser(user)
-                })
-
-                setUsername("")
-                setPassword("")
-                setProfileImg("")
-            }
-            else {
-                res.json().then(error => setErrors([...errors, error.error]))
-            }
-        })        
-
-        
+        setCurrentUser(null)
+        setUserCharacters([])
+        setCurrentCharacter(null)
     }
 
     function handleAddCharacter(e, character) {
@@ -184,7 +105,10 @@ function App() {
         })
         .then(res => {
             if (res.ok) {
-                res.json().then(updateCurrentCharacter)
+                res.json().then( characterData => {
+                    setUserCharacters([...userCharacters, characterData])
+                    setCurrentCharacter(characterData)
+                })
             }
             else {
                 res.json().then(error => setErrors([...errors, error.error]))
@@ -203,9 +127,9 @@ function App() {
                 }}>Sign Up</button>
                 
             </div> : null}
-            {currentUser != null ? <ProfileBar handleLogOut={handleLogOut} selectCharacter={selectCharacter} currentUser={currentUser} currentCharacter={currentCharacter}/> :
-            login ? <LoginForm handleLogin={handleLogin} loginUser={loginUser} onChangeUsername={handleUpdateLoginUser} onChangePassword={handleUpdateLoginPass} loginPass={loginPass} />
-            : <CreateUserForm handleAddUser={handleAddUser} newUsername={newUsername} onChangeUsername={handleUpdateFormUsername} newPassword={newPassword} onChangePassword={handleUpdateFormPassword} newProfileImg={newProfileImg} onChangeProfileImg={handleUpdateFormProfileImg}/>}
+            {currentUser != null ? <ProfileBar handleDeleteCharacter={handleDeleteCharacter} handleLogOut={handleLogOut} selectCharacter={selectCharacter} currentUser={currentUser} userCharacters={userCharacters} currentCharacter={currentCharacter}/> :
+            login ? <LoginForm handleLogin={handleLogin}/>
+            : <CreateUserForm handleLogin={handleLogin}/>}
             
             {currentUser != null && currentUser.admin ? <AdminControls currentUser={currentUser}/> : null}
             <Routes>

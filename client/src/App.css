@@ -191,6 +191,7 @@ html *::-webkit-scrollbar {
     height: 210px;
     text-align: center;
     color: rgb(75, 10, 15);
+    padding-bottom: 5px;
 }
 
 .user-display h2 {
@@ -236,6 +237,104 @@ html *::-webkit-scrollbar {
 }
 .character-link div p {
     font-size: smaller;
+    
+}
+
+.character-info {
+    color: white;
+    background-image: url("../assets/images/rough-stone.png");
+    background-size: 150px 150px;
+    background-repeat: round;
+    width: 60%;
+    text-align: center;
+    margin: auto;
+    outline: grey ridge 5px;
+    height: 75%;
+    overflow-y: auto;
+}
+
+.character-info button {
+    background-image: url("../assets/images/button-ruby.png");
+    background-color: transparent;
+    background-size: 100px 100px;
+    height: 100px;
+    width: 100px;
+    color: rgb(255, 255, 255);
+    font-size: small;
+    /* outline: #1E1E1E ridge 3px;
+    outline-offset: -3px; */
+    outline: none;
+    border: none;
+    animation: shift 5s linear 2s infinite alternate;
+    margin: auto;
+
+}
+
+.character-info div.inventory p {
+    width: 75%;
+    margin: auto;
+    text-align: center;
+}
+
+.character-info h4 {
+    margin: auto;
+    font-size: large;
+    background-color: #310000;
+    width: 75%;
+    outline: rgb(78, 78, 78) 3px ridge;
+    outline-offset: -3px;
+    padding: 3px;
+}
+
+p.common {
+    color: grey
+}
+
+p.uncommon {
+    color: green;
+}
+
+p.rare {
+    color: rgb(48, 86, 237);
+}
+
+p.super-rare {
+    color: purple;
+}
+
+p.legendery {
+    color: darkorange;
+}
+
+p.unique {
+    color: aquamarine;
+}
+
+div .item-details p {
+    background-color: rgb(57, 57, 57);
+}
+
+.character-info p {
+    background-color: #1E1E1E;
+    outline: rgb(78, 78, 78) 3px ridge;
+    outline-offset: -3px;
+    width: 75%;
+    margin: auto;
+    padding: 3px;
+    text-align: center;
+}
+
+.character-info button {
+    text-align: center;
+    margin: auto;
+}
+
+.battle {
+    background-image: url("../assets/images/black_bricks.png");
+    background-size: 100px 100px;
+    background-repeat: round;
+    background-position: -25px;
+    color: white;
     
 }
 
@@ -289,6 +388,7 @@ html *::-webkit-scrollbar {
     text-align: center;
     background-image: url("../assets/images/red_brick_wall.png");
     background-size: 100px 100px;
+    background-repeat: round;
     outline: #310000 ridge 5px;
     padding-top: 35px;
     padding-bottom: 35px;
@@ -338,6 +438,15 @@ html *::-webkit-scrollbar {
     filter: brightness(50%);
 }
 
+.resource-bar {
+    width: 100%;
+    height: 10px;
+    background-color: red;
+}
+
+.enemy-display {
+    width: 10%;
+}
 
 
 .dungeon-actual {
@@ -462,6 +571,18 @@ html *::-webkit-scrollbar {
     }
     to {
         transform: scale(1.5);
+    }
+}
+
+@keyframes shift {
+    from {
+        color: white
+    }
+    to {
+        color: black
+    }
+    to {
+        color: white
     }
 }
 
@@ -600,9 +721,15 @@ html *::-webkit-scrollbar {
     height: 0;
     padding-bottom: 20%;
     float: left;
-    background-image: url("../assets/images/shop_item_background.png");
-    background-size: cover;
-    color: black;
+    color: white;
+}
+
+.item-image-bow {
+    content: url("../assets/images/bow.png");
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    margin: auto;
 }
 
 .shop-display button {

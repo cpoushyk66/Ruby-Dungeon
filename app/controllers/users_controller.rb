@@ -9,12 +9,17 @@ class UsersController < ApplicationController
     end
 
     def show
-        user = find_user
-        render json: user, status: :ok
+        user = User.find_by(id: session[:user_id])
+        if user
+            render json: user
+        else
+            render json: { error: "Not authorized" }, status: :unauthorized
+        end
     end
 
     def create
         user = User.create!(user_params)
+        session[:user_id] = user.id
         render json: user, status: :created
     end
 
@@ -28,15 +33,6 @@ class UsersController < ApplicationController
         user = find_user
         user.destroy
         head :no_content
-    end
-
-    def login
-        user = User.where("username = ? AND password = ?", params[:username], params[:password]).take
-        if (user)
-            render json: user, methods: :characters, status: :accepted
-        else
-            render_not_found_response
-        end
     end
 
     def give_admin_access
@@ -56,7 +52,7 @@ class UsersController < ApplicationController
     end
 
     def user_params
-        params.permit(:username, :password, :image, :dark_mode)
+        params.permit(:username, :password, :image)
     end
 
     def render_not_found_response

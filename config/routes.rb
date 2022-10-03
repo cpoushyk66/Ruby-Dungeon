@@ -9,9 +9,13 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
 
+  #Session Routes
+  post "login", to: "sessions#create"
+  delete "/logout", to: "sessions#destroy"
+
   #User BASIC CRUD Routes
   get "users", to: "users#index"
-  get "users/:id", to: "users#show"
+  get "me", to: "users#show"
   post "users", to: "users#create"
   patch "users/:id", to: "users#update"
   delete "users/:id", to: "users#destroy" 
@@ -35,6 +39,8 @@ Rails.application.routes.draw do
   #Characters Custom Routes
     #Makes character buy item with id :id
   get "characters/:id/:shop_action/:item_id", to: "characters#shop"
+  patch "characters/:id/level_up", to: "characters#level_up"
+
   #Enemy Basic CRUD Routes
   get "enemies", to: "enemies#index"
   get "enemies/:id", to: "enemies#show"
@@ -66,4 +72,5 @@ Rails.application.routes.draw do
 
   #Special Custom Routes
   get "dungeons/generate/:num", to: "dungeon#generate_dungeon"
+  get "dungeons/get_leveled_enemies/:amount/:difficulty", to: "dungeon#get_leveled_enemies"
 end

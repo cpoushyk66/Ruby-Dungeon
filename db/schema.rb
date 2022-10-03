@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_21_182447) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_03_183611) do
   create_table "characters", force: :cascade do |t|
     t.string "name", default: "Adventurer", null: false
     t.string "title", default: "", null: false
@@ -26,6 +26,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_182447) do
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "level", default: 0
   end
 
   create_table "enemies", force: :cascade do |t|
@@ -45,6 +46,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_182447) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "equipment", force: :cascade do |t|
+    t.integer "pocket_id"
+    t.string "equip_type", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "wearer_type"
+    t.integer "wearer_id"
+    t.index ["wearer_type", "wearer_id"], name: "index_equipment_on_wearer"
+  end
+
   create_table "items", force: :cascade do |t|
     t.string "name", null: false
     t.string "item_type", null: false
@@ -57,6 +68,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_182447) do
     t.string "flavor_text", default: "An item for sure!", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "image", default: "../../assets/images/question.png", null: false
   end
 
   create_table "pockets", force: :cascade do |t|
@@ -92,10 +104,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_182447) do
     t.string "username", null: false
     t.string "password", null: false
     t.string "image", null: false
-    t.boolean "dark_mode", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "admin", default: false, null: false
+    t.integer "character_tokens", default: 0, null: false
   end
 
 end

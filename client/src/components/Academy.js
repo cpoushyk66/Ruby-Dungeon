@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
+import LevelUp from "./LevelUp";
 import MakeCharacter from "./MakeCharacter";
 import Spell from "./Spell";
 
 
-function Academy({handleAddCharacter, currentUser, currrentCharacter}) {
+function Academy({handleAddCharacter, currentUser, currentCharacter}) {
 
     const [buttonResult, setButtonResults] = useState("")
 
@@ -20,7 +21,8 @@ function Academy({handleAddCharacter, currentUser, currrentCharacter}) {
                 return <MakeCharacter handleAddCharacter={handleAddCharacter}/>
                 break;
             case "level":
-            break;
+                return <LevelUp character={currentCharacter}/>
+                break;
             case "learn":
             break;
         }
