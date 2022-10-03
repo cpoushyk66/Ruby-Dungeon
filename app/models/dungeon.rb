@@ -39,13 +39,17 @@ class Dungeon < ApplicationRecord
         chance = Random.rand(1..100)
 
         if chance <= 25
-            {room_type: "item_room", coords: [x, y], visited: false, content: Random.rand(1..3)}
+            {room_type: "item_room", coords: [x, y], visited: false, content: Random.rand(1..3), cleared: false}
         elsif chance <=60
-            {room_type: "enemy_room", coords: [x, y], visited: false, content: Random.rand(1..3)}
+            {room_type: "enemy_room", coords: [x, y], visited: false, content: Random.rand(1..3), cleared: false}
         elsif chance <= 80
-            {room_type: "boss_room", coords: [x, y], visited: false, content: 1}
+            {room_type: "boss_room", coords: [x, y], visited: false, content: 1, cleared: false}
         else
-            {room_type: "empty_room", coords: [x, y], content: 0}
+            {room_type: "empty_room", coords: [x, y], content: 0, cleared: false}
         end
+    end
+
+    def self.get_leveled_enemies(amount, difficulty)
+        Enemy.where("level <= ?", difficulty).sample(amount).uniq
     end
 end

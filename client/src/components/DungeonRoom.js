@@ -19,6 +19,16 @@ function DungeonRoom({character}) {
         })
     }, [])
     
+    function handleBattleWon() {
+
+        let dungeonTemp = [...dungeon.dungeon]
+        dungeonTemp[position[0]][position[1]].cleared = true
+        setDungeon({
+            rooms: dungeon.rooms,
+            dungeon: dungeonTemp
+        })
+        setBattle(false)
+    }
 
     function clamp(num, min, max) {
         return Math.min(Math.max(min, num), max)
@@ -37,7 +47,7 @@ function DungeonRoom({character}) {
                 if (room.coords[0] == newCoords[0] && room.coords[1] == newCoords[1]) {
                     room.visited = true
                     
-                    if (room.room_type == "enemy_room" || room.room_type == "boss_room") {
+                    if ((room.room_type == "enemy_room" || room.room_type == "boss_room") && !room.cleared) {
                         setEnemies(room.content)
                         setBattle(true)
                     }
@@ -108,7 +118,7 @@ function DungeonRoom({character}) {
                 <tbody>
                     {dungeon != null ? makeDungeon() : null}
                 </tbody>
-            </table> : <Battle character={character} enemies={enemies != null ? enemies : []} />}
+            </table> : <Battle handleBattleWon={handleBattleWon} character={character} enemies={enemies != null ? enemies : []} />}
 
             
             <button onClick={() => movePlayer([0, 0], dungeon)}>Move to Origin</button>

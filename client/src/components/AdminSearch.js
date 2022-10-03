@@ -22,7 +22,7 @@ function AdminSearch({typeSearch}) {
 
     function makeTable() {
         console.log(datas)        
-        return datas.map(data => <tr key={index += 1}>{Object.keys(data).map(key => (key == "spells" || key == "items") ? null : <td key={index += 1} >{(data[key] == true) ? "1" : ((data[key] == false) ? "0" : data[key])}</td>)}</tr>)
+        return datas.map(data => <tr style={{"fontSize": "medium", "padding": "4px"}} key={index += 1}>{Object.keys(data).map(key => (key == "spells" || key == "items" || key == "equiped_items") ? null : <td key={index += 1} >{(data[key] == true) ? "1" : ((data[key] == false) ? "0" : data[key])}</td>)}</tr>)
     }
 
     if (errors.length > 0) return <ol>{errors.entries.map(er => <li>{er.upcase()}</li>)}</ol>
@@ -31,12 +31,12 @@ function AdminSearch({typeSearch}) {
         <div>
             <table className="admin-table" cellPadding={0} cellSpacing={0}>
                 <thead>
-                    <tr>
-                        {datas != null && datas.length > 0 ? Object.keys(datas[0]).map(key => (key == "spells" || key == "items") ? null : <td key={index += 1}>{key}</td>) : null}
+                    <tr style={{"fontSize": "larger"}}>
+                        {datas != null && datas.length > 0 ? Object.keys(datas[0]).map(key => (key == "spells" || key == "items" || key == "equiped_items") ? null : <td key={index += 1}>{key}</td>) : null}
                     </tr>
                 </thead>
                 <tbody>
-                    {datas != null && datas.length > 0 ? makeTable() : <h2>No {typeSearch}</h2>}
+                    {datas != null && datas.length > 0 ? makeTable() : <tr><td>No {typeSearch}</td></tr>}
                 </tbody>
             </table>
         </div>

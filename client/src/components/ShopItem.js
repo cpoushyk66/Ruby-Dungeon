@@ -38,11 +38,16 @@ function ShopItem({updateCurrentCharacter, character, buying, item}) {
         }
     }
 
+    function calcPrice() {
+        return buying ? Math.floor(item.value * (1 + (1 - character.charisma / 20))) : Math.ceil(item.value * (character.charisma / 20))
+    }
+
     return (
         <div className="single" >
             <p>{item.name}</p>
+            <div className={`item-image-${item.image}`}></div>
             <p>{item.flavor_text}</p>
-            <p>Cost {item.value} gold!</p>
+            <p>Cost {calcPrice()} gold!</p>
             {buying ? <button onClick={handleBuy}>Buy</button> : <button onClick={handleSell} >{item.sellable ? "Sell" : "Unsellable"}</button>}
         </div>
     )

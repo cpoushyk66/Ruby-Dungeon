@@ -36,23 +36,23 @@ function MakeCharacter({handleAddCharacter}) {
                 charisma: charisma,
             }
             
+            handleAddCharacter(e, character)
             setCharisma(1)
             setConstitution(1)
             setDexterity(1)
             setIntelligence(1)
-            setKlass("")
+            setKlass("Warrior")
             setStrength(1)
             setWisdom(1)
             setName("")
             setSubmitted(false)
             setMakeOn(false)
-            handleAddCharacter(e, character)
 
         }
     }
 
     function addStrPoint() {
-        if (skillPoints > 0) {
+        if (skillPoints > 0 && strength < 20) {
             setStrength(strength + 1)
             setSkillPoints(skillPoints - 1)
         }
@@ -66,7 +66,7 @@ function MakeCharacter({handleAddCharacter}) {
     }
 
     function addDexPoint() {
-        if (skillPoints > 0) {
+        if (skillPoints > 0 && dexterity < 20) {
             setDexterity(dexterity + 1)
             setSkillPoints(skillPoints - 1)
         }
@@ -80,7 +80,7 @@ function MakeCharacter({handleAddCharacter}) {
     }
 
     function addWisPoint() {
-        if (skillPoints > 0) {
+        if (skillPoints > 0 && wisdom < 20) {
             setWisdom(wisdom + 1)
             setSkillPoints(skillPoints - 1)
         }
@@ -94,7 +94,7 @@ function MakeCharacter({handleAddCharacter}) {
     }
 
     function addIntPoint() {
-        if (skillPoints > 0) {
+        if (skillPoints > 0 && intelligence < 20) {
             setIntelligence(intelligence + 1)
             setSkillPoints(skillPoints - 1)
         }
@@ -108,7 +108,7 @@ function MakeCharacter({handleAddCharacter}) {
     }
 
     function addChaPoint() {
-        if (skillPoints > 0) {
+        if (skillPoints > 0 && charisma < 20) {
             setCharisma(charisma + 1)
             setSkillPoints(skillPoints - 1)
         }
@@ -122,7 +122,7 @@ function MakeCharacter({handleAddCharacter}) {
     }
 
     function addConPoint() {
-        if (skillPoints > 0) {
+        if (skillPoints > 0 && constitution < 20) {
             setConstitution(constitution + 1)
             setSkillPoints(skillPoints - 1)
         }
